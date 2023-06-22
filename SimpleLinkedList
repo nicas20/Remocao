@@ -1,0 +1,98 @@
+package linked_link;
+
+import Stack.StackUnderflowException;
+
+public class SimpleLinkedList<T> {
+
+    private Node<T> head;
+    private int size;
+
+    public void insert(T value, int idx) throws IndexOutOfBoundsException {
+        if (idx < 0 || idx > this.size) {
+            throw new IndexOutOfBoundsException("");
+        }
+        Node<T> node = new Node<T>();
+        node.setValue(value);
+        if (idx == 0) {
+            node.setNext(this.head);
+            this.head = node;
+        } else if (idx == this.size && this.size > 0) {
+            Node<T> aux = this.head;
+            while (aux.getNext() != null) {
+                aux = aux.getNext();
+            }
+            aux.setNext(node);
+        } else {
+            Node<T> aux = this.head;
+            for (int i = 0; i < idx - 1; i++) {
+                aux = aux.getNext();
+            }
+            node.setNext(aux.getNext());
+            aux.setNext(node);
+        }
+        this.size++;
+    }
+
+    public T get(int idx) throws IndexOutOfBoundsException {
+        if (idx < 0 || idx >= this.size) {
+            throw new IndexOutOfBoundsException("");
+        }
+        Node<T> aux = this.head;
+        for (int i = 0; i < idx; i++) {
+            aux = aux.getNext();
+        }
+        return aux.getValue();
+    }
+
+    @Override
+    public String toString() {
+        String out = "[";
+        Node<T> aux = this.head;
+        while (aux != null) {
+            out += aux.getValue().toString();
+            out += (aux.getNext() != null ? ", " : "");
+            aux = aux.getNext();
+        }
+        return out + "]";
+    }
+
+    public static void main(String[] args) throws StackUnderflowException {
+        SimpleLinkedList<String> sll = new SimpleLinkedList<String>();
+        sll.insert("aa", 0);
+        sll.insert("bb", 0);
+        sll.insert("cc", 2);
+        sll.insert("dd", 1);
+        System.out.println(sll.toString());
+        System.out.println(sll.get(0));
+        System.out.println(sll.get(1));
+        System.out.println(sll.get(2));
+        System.out.println(sll.get(3));
+        sll.remove(3);
+        System.out.println(sll.toString());
+    }
+
+    public Node<T> getNode(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= this.size) {
+            throw new IndexOutOfBoundsException("");
+        }
+        Node<T> aux = this.head;
+        for (int i = 0; i < index; i++) {
+            aux = aux.getNext();
+        }
+        return aux;
+    }
+
+    public void remove(int index) throws StackUnderflowException {
+        if (this.size == 0) {
+            throw new StackUnderflowException();
+        }
+        if (this.size == 1) {
+            this.head = null;
+        } else if (index == 0) {
+            this.head = getNode(index).getNext();
+        } else {
+            getNode(index - 1).setNext(getNode(index).getNext());
+        }
+        this.size--;
+    }
+}
